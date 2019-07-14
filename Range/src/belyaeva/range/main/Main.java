@@ -2,18 +2,19 @@ package belyaeva.range.main;
 
 import belyaeva.range.task.Range;
 
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
         Range range1 = new Range(5, 12);
-        Range range2 = new Range(3, 17.6);
+        Range range2 = new Range(3, 17);
         double number = 9.4;
 
         System.out.println("Length = " + range1.getLength());
         System.out.println("IsInside = " + range1.isInside(number));
-        System.out.printf("Distance = %.2f%n", range1.getDistance(range2));
         System.out.println();
 
-        Range iRange = range1.getIntersection(range2);
+        Range iRange = range2.getIntersection(range1);
 
         if (iRange != null) {
             System.out.println("IntersectionFrom = " + iRange.getFrom());
@@ -26,10 +27,12 @@ public class Main {
         range1.setFrom(5);
         range1.setTo(12);
 
-        Range uRange = range1.getUnion(range2);
+        Range[] uRange = range1.getUnion(range2);
 
-        System.out.println("UnionFrom = " + uRange.getFrom());
-        System.out.println("UnionTo = " + uRange.getTo());
+        for (Range range : uRange) {
+            System.out.println("UnionFrom = " + range.getFrom());
+            System.out.println("UnionTo = " + range.getTo());
+        }
         System.out.println();
 
         range1.setFrom(5);
@@ -37,13 +40,14 @@ public class Main {
 
         Range[] dRange = range1.getDifference(range2);
 
-        for (Range range : dRange) {
-            if (range != null) {
+        if (dRange.length == 0) {
+            System.out.println("Difference = 0");
+        } else {
+            for (Range range : dRange) {
                 System.out.println("DifferenceFrom = " + range.getFrom());
                 System.out.println("DifferenceTo = " + range.getTo());
-            } else {
-                System.out.println("Difference = " + null);
             }
         }
     }
 }
+

@@ -33,54 +33,51 @@ public class Range {
         return number >= from && number <= to;
     }
 
-    public double getDistance(Range r) {
-        return Math.sqrt(Math.pow((from - r.from), 2) + Math.pow((to - r.to), 2));
-    }
-
-    public Range getIntersection(Range r) {
-        if (r.from > to || r.to < from) {
+    public Range getIntersection(Range range) {
+        if (range.from >= to || range.to <= from) {
             return null;
         }
-        if (isInside(r.from)) {
-            from = r.from;
+        if (range.from >= from && range.to <= to) {
+            return new Range(range.from, range.to);
         }
-        if (isInside(r.to)) {
-            to = r.to;
+        if (range.from < from && range.to > to) {
+            return new Range(from, to);
         }
-        return new Range(from, to);
+        if (range.from < from && range.to <= to) {
+            return new Range(from, range.to);
+        }
+        return new Range(range.from, to);
     }
 
-    public Range getUnion(Range r) {
-        if (!isInside(r.from) && r.from < from) {
-            from = r.from;
+    public Range[] getUnion(Range range) {
+        if (range.from > to || range.to < from) {
+            return new Range[]{new Range(from, to), new Range(range.from, range.to)};
         }
-        if (!isInside(r.to) && r.to > to) {
-            to = r.to;
+        if (range.from >= from && range.to <= to) {
+            return new Range[]{new Range(from, to)};
         }
-        return new Range(from, to);
+        if (range.from < from && range.to > to) {
+            return new Range[]{new Range(range.from, range.to)};
+        }
+        if (range.from < from && range.to <= to) {
+            return new Range[]{new Range(range.from, to)};
+        }
+        return new Range[]{new Range(from, range.to)};
     }
 
-    public Range[] getDifference(Range r) {
-        double checkFrom = from;
-        double checkTo = to;
-        Range forCheck = new Range(checkFrom, checkTo);
-        Range[] range = new Range[2];
-
-        if (getIntersection(r) == null) {
-            range[0] = forCheck;
-        } else if (from > forCheck.from && to < forCheck.to) {
-            double from1 = to + 0.1;
-            double to1 = checkTo;
-            checkTo = from - 0.1;
-            range[0] = new Range(checkFrom, checkTo);
-            range[1] = new Range(from1, to1);
-        } else if (from > forCheck.from) {
-            checkTo = from - 0.1;
-            range[0] = new Range(checkFrom, checkTo);
-        } else if (to < forCheck.to) {
-            checkFrom = to + 0.1;
-            range[0] = new Range(checkFrom, checkTo);
+    public Range[] getDifference(Range range) {
+        if (range.from > to || range.to < from) {
+            return new Range[]{new Range(from, to)};
         }
-        return range;
+        if (range.from >= from && range.to <= to) {
+            return new Range[]{new Range(from, range.from), new Range(range.to, to)};
+        }
+        if (range.from < from && range.to > to) {
+            return new Range[]{};
+        }
+        if (range.from < from && range.to <= to) {
+            return new Range[]{new Range(range.to, to)};
+        }
+        return new Range[]{new Range(from, range.from)};
     }
 }
