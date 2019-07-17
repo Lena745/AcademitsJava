@@ -2,12 +2,10 @@ package belyaeva.range.main;
 
 import belyaeva.range.task.Range;
 
-import java.util.Arrays;
-
 public class Main {
     public static void main(String[] args) {
         Range range1 = new Range(5, 12);
-        Range range2 = new Range(3, 17);
+        Range range2 = new Range(2, 5);
         double number = 9.4;
 
         System.out.println("Length = " + range1.getLength());
