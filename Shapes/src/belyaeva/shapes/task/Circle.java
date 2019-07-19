@@ -29,7 +29,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "Circle area = " + getArea() + "; Circle perimeter = " + getPerimeter();
+        return "Circle: radius = " + radius + ", area = " + getArea() + ", perimeter = " + getPerimeter();
     }
 
     @Override

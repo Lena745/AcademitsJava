@@ -1,8 +1,10 @@
-package belyaeva.shapes.task;
+package belyaeva.shapes.main;
+
+import belyaeva.shapes.task.Shape;
 
 import java.util.Comparator;
 
-public class CompareByArea implements Comparator<Shape> {
+public class AreaComparator implements Comparator<Shape> {
     @Override
     public int compare(Shape shape1, Shape shape2) {
         return Double.compare(shape1.getArea(), shape2.getArea());

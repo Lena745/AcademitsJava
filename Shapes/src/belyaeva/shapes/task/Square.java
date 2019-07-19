@@ -29,7 +29,7 @@ public class Square implements Shape {
 
     @Override
     public String toString() {
-        return "Square area = " + getArea() + "; Square perimeter = " + getPerimeter();
+        return "Square: side = " + side + ", area = " + getArea() + ", perimeter = " + getPerimeter();
     }
 
     @Override

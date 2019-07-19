@@ -17,19 +17,27 @@ public class Triangle implements Shape {
         this.y3 = y3;
     }
 
+    private double getLength(double a, double b, double c) {
+        return Math.max(a, Math.max(b, c)) - Math.min(a, Math.min(b, c));
+    }
+
     @Override
     public double getWidth() {
-        return Math.max(Math.max(x1, x2), Math.max(x2, x3)) - Math.min(Math.min(x1, x2), Math.min(x2, x3));
+        return getLength(x1, x2, x3);
     }
 
     @Override
     public double getHeight() {
-        return Math.max(Math.max(y1, y2), Math.max(y2, y3)) - Math.min(Math.min(y1, y2), Math.min(y2, y3));
+        return getLength(y1, y2, y3);
     }
 
     @Override
     public double getArea() {
-        return (getWidth() * getHeight()) / 2;
+        double side1 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        double side2 = Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2));
+        double side3 = Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2));
+        double halfPerimeter = (side1 + side2 + side3) / 2;
+        return Math.sqrt(halfPerimeter * (halfPerimeter - side1) * (halfPerimeter - side2) * (halfPerimeter - side3));
     }
 
     @Override
@@ -39,7 +47,7 @@ public class Triangle implements Shape {
 
     @Override
     public String toString() {
-        return "Triangle area = " + getArea() + "; Triangle perimeter = " + getPerimeter();
+        return "Triangle: (x1, y1) = " + "(" + x1 + ", " + y1 + "), " + "(x2, y2) = " + "(" + x2 + ", " + y2 + "), " + "(x3, y3) = " + "(" + x3 + ", " + y3 + "), " + "area = " + getArea() + ", perimeter = " + getPerimeter();
     }
 
     @Override

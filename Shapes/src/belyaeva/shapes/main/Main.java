@@ -16,24 +16,12 @@ public class Main {
         Shape circle2 = new Circle(3);
         Shape circle3 = new Circle(3);
 
-        CompareByArea areaComparator = new CompareByArea();
-        CompareByPerimeter perimeterComparator = new CompareByPerimeter();
+        Shape[] shapes = new Shape[]{square1, triangle1, rectangle1, circle1, square2, triangle2, rectangle2, circle2};
 
-        Shape[] shapes = new Shape[8];
-
-        shapes[0] = square1;
-        shapes[1] = triangle1;
-        shapes[2] = rectangle1;
-        shapes[3] = circle1;
-        shapes[4] = square2;
-        shapes[5] = triangle2;
-        shapes[6] = rectangle2;
-        shapes[7] = circle2;
-
-        Arrays.sort(shapes, areaComparator);
+        Arrays.sort(shapes, new AreaComparator());
         System.out.println("Max shape area: " + shapes[shapes.length - 1]);
 
-        Arrays.sort(shapes, perimeterComparator);
+        Arrays.sort(shapes, new PerimeterComparator());
         System.out.println("Max-1 shape perimeter: " + shapes[shapes.length - 2]);
         System.out.println();
 
