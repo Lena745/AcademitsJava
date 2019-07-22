@@ -17,7 +17,7 @@ public class Triangle implements Shape {
         this.y3 = y3;
     }
 
-    private double getLength(double a, double b, double c) {
+    private static double getLength(double a, double b, double c) {
         return Math.max(a, Math.max(b, c)) - Math.min(a, Math.min(b, c));
     }
 
@@ -31,11 +31,15 @@ public class Triangle implements Shape {
         return getLength(y1, y2, y3);
     }
 
+    private static double getSide(double a, double b, double c, double d) {
+        return Math.sqrt(Math.pow(b - a, 2) + Math.pow(d - c, 2));
+    }
+
     @Override
     public double getArea() {
-        double side1 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-        double side2 = Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2));
-        double side3 = Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2));
+        double side1 = getSide(x1, x2, y1, y2);
+        double side2 = getSide(x2, x3, y2, y3);
+        double side3 = getSide(x1, x3, y1, y3);
         double halfPerimeter = (side1 + side2 + side3) / 2;
         return Math.sqrt(halfPerimeter * (halfPerimeter - side1) * (halfPerimeter - side2) * (halfPerimeter - side3));
     }
