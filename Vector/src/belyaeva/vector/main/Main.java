@@ -7,7 +7,7 @@ public class Main {
         Vector vector1 = new Vector(3);
         Vector vector2 = new Vector(3, new double[]{2, 6, 4});
         Vector vector3 = new Vector(5, new double[]{6, 9, 5});
-        Vector vector4 = new Vector(new double[]{1, 2, 3, 4, 5, 6, 7});
+        Vector vector4 = new Vector(new double[]{1, 2, 3, 6});
         Vector vector5 = new Vector(vector2);
         Vector vector6 = new Vector(5, new double[]{6, 9, 5});
 
@@ -16,20 +16,22 @@ public class Main {
         System.out.println("Vector(double[] vector) = " + vector4);
         System.out.println("Vector(int n, double[] vector) = " + vector3);
         System.out.println("getSize = " + vector4.getSize());
-        System.out.println("addVector = " + vector5.addVector(vector4));
-        System.out.println("subVector = " + vector4.subVector(vector3));
+        System.out.println("addVector = " + vector3.addVector(vector4));
+        System.out.println("subVector = " + vector4.subVector(vector2));
 
         double scalar = 0.9;
 
         System.out.println("multiplyByScalar = " + vector2.multiplyByScalar(scalar));
-        System.out.println("turn = " + vector5.turn());
+        System.out.println("turn = " + vector5.revert());
         System.out.println("getLength = " + vector2.getLength());
-        System.out.println("setAndGetValue = " + vector4.setAndGetValue(4, 9));
+        vector4.setValue(2, 4);
+        System.out.println("after set value = " + vector4);
+        System.out.println("getValue = " + vector5.getValue(2));
         System.out.println("equals = " + vector3.equals(vector6));
         System.out.println(vector1.hashCode() == vector4.hashCode());
 
-        System.out.println("static addVector = " + Vector.addVector(vector4, vector3));
-        System.out.println("static subVector = " + Vector.subVector(vector3, vector4));
-        System.out.println("static getScalarProduct = " + Vector.getScalarProduct(vector3, vector4));
+        System.out.println("static addVector = " + Vector.addVector(vector5, vector3));
+        System.out.println("static subVector = " + Vector.subVector(vector6, vector4));
+        System.out.println("static getScalarProduct = " + Vector.getScalarProduct(vector3, vector2));
     }
 }
