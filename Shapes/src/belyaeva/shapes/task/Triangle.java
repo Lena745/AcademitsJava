@@ -31,20 +31,20 @@ public class Triangle implements Shape {
         return getLength(y1, y2, y3);
     }
 
-    private static double getDistance(double a, double b, double a1, double b1) {
-        return Math.sqrt(Math.pow(b - a, 2) + Math.pow(b1 - a1, 2));
+    private static double getDistance(double beginX, double beginY, double endX, double endY) {
+        return Math.sqrt(Math.pow(endX - beginX, 2) + Math.pow(endY - beginY, 2));
     }
 
     @Override
     public double getPerimeter() {
-        return getDistance(x1, x2, y1, y2) + getDistance(x2, x3, y2, y3) + getDistance(x1, x3, y1, y3);
+        return getDistance(x1, y1, x2, y2) + getDistance(x2, y2, x3, y3) + getDistance(x1, y1, x3, y3);
     }
 
     @Override
     public double getArea() {
-        double side1 = getDistance(x1, x2, y1, y2);
-        double side2 = getDistance(x2, x3, y2, y3);
-        double side3 = getDistance(x1, x3, y1, y3);
+        double side1 = getDistance(x1, y1, x2, y2);
+        double side2 = getDistance(x2, y2, x3, y3);
+        double side3 = getDistance(x1, y1, x3, y3);
         double halfPerimeter = getPerimeter() / 2;
         return Math.sqrt(halfPerimeter * (halfPerimeter - side1) * (halfPerimeter - side2) * (halfPerimeter - side3));
     }
