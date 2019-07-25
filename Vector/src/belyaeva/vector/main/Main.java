@@ -7,7 +7,7 @@ public class Main {
         Vector vector1 = new Vector(3);
         Vector vector2 = new Vector(3, new double[]{2, 6, 4});
         Vector vector3 = new Vector(5, new double[]{6, 9, 5});
-        Vector vector4 = new Vector(new double[]{1, 2, 3, 6});
+        Vector vector4 = new Vector(new double[]{1, 2, 3, 6, 0});
         Vector vector5 = new Vector(vector2);
         Vector vector6 = new Vector(5, new double[]{6, 9, 5});
 
@@ -16,8 +16,10 @@ public class Main {
         System.out.println("Vector(double[] vector) = " + vector4);
         System.out.println("Vector(int n, double[] vector) = " + vector3);
         System.out.println("getSize = " + vector4.getSize());
-        System.out.println("addVector = " + vector3.addVector(vector4));
-        System.out.println("subVector = " + vector4.subVector(vector2));
+        vector2.addVector(vector4);
+        System.out.println("addVector = " + vector2);
+        vector4.subVector(vector3);
+        System.out.println("subVector = " + vector4);
 
         double scalar = 0.9;
 
