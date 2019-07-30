@@ -50,7 +50,7 @@ public class Vector {
     }
 
     private double[] getMaxVector(Vector v) {
-        if (components.length > v.components.length) {
+        if (components.length >= v.components.length) {
             return this.components;
         }
         return v.components;
@@ -64,44 +64,49 @@ public class Vector {
     }
 
     public void addVector(Vector v) {
-        int maxVector = getMaxVector(v).length;
         int minVector = getMinVector(v).length;
-        double[] newComponents = Arrays.copyOf(getMaxVector(v), maxVector);
+        int maxVector = getMaxVector(v).length;
 
-        for (int i = 0; i < minVector; i++) {
-            newComponents[i] = components[i] + v.components[i];
+        if (Arrays.equals(v.components, getMaxVector(v))) {
+            double[] newComponents = Arrays.copyOf(v.components, maxVector);
+
+            for (int i = 0; i < minVector; i++) {
+                newComponents[i] += components[i];
+            }
+            this.components = newComponents;
+        } else {
+            for (int i = 0; i < minVector; i++) {
+                components[i] += v.components[i];
+            }
         }
-        this.components = newComponents;
     }
 
     public void subVector(Vector v) {
         int maxVector = getMaxVector(v).length;
         int minVector = getMinVector(v).length;
-        double[] newComponents = Arrays.copyOf(getMaxVector(v), maxVector);
 
-        for (int i = 0; i < minVector; i++) {
-            newComponents[i] = components[i] - v.components[i];
-        }
+        if (Arrays.equals(v.components, getMaxVector(v))) {
+            double[] newComponents = Arrays.copyOf(components, maxVector);
 
-        if (maxVector > components.length) {
-            for (int i = minVector; i < maxVector; i++) {
-                newComponents[i] = 0 - newComponents[i];
+            for (int i = 0; i < maxVector; i++) {
+                newComponents[i] -= v.components[i];
+            }
+            this.components = newComponents;
+        } else {
+            for (int i = 0; i < minVector; i++) {
+                components[i] -= v.components[i];
             }
         }
-        this.components = newComponents;
     }
 
-    public Vector multiplyByScalar(double scalar) {
+    public void multiplyByScalar(double scalar) {
         for (int i = 0; i < components.length; i++) {
             components[i] *= scalar;
         }
-        return this;
     }
 
-    public Vector revert() {
+    public void revert() {
         multiplyByScalar(-1);
-
-        return this;
     }
 
     public double getLength() {
