@@ -67,17 +67,13 @@ public class Vector {
         int minVector = getMinVector(v).length;
         int maxVector = getMaxVector(v).length;
 
-        if (Arrays.equals(v.components, getMaxVector(v))) {
-            double[] newComponents = Arrays.copyOf(v.components, maxVector);
+        if (v.components == getMaxVector(v)) {
+            this.components = Arrays.copyOf(components, maxVector);
+            minVector = maxVector;
+        }
 
-            for (int i = 0; i < minVector; i++) {
-                newComponents[i] += components[i];
-            }
-            this.components = newComponents;
-        } else {
-            for (int i = 0; i < minVector; i++) {
-                components[i] += v.components[i];
-            }
+        for (int i = 0; i < minVector; i++) {
+            components[i] += v.components[i];
         }
     }
 
@@ -85,19 +81,16 @@ public class Vector {
         int maxVector = getMaxVector(v).length;
         int minVector = getMinVector(v).length;
 
-        if (Arrays.equals(v.components, getMaxVector(v))) {
-            double[] newComponents = Arrays.copyOf(components, maxVector);
+        if (v.components == getMaxVector(v)) {
+            this.components = Arrays.copyOf(components, maxVector);
+            minVector = maxVector;
+        }
 
-            for (int i = 0; i < maxVector; i++) {
-                newComponents[i] -= v.components[i];
-            }
-            this.components = newComponents;
-        } else {
-            for (int i = 0; i < minVector; i++) {
-                components[i] -= v.components[i];
-            }
+        for (int i = 0; i < minVector; i++) {
+            components[i] -= v.components[i];
         }
     }
+
 
     public void multiplyByScalar(double scalar) {
         for (int i = 0; i < components.length; i++) {
