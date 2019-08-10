@@ -7,11 +7,13 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    private static void getFileStrings(ArrayList<String> fileStrings) throws FileNotFoundException {
-        try (Scanner scanner = new Scanner(new FileInputStream("InputStrings.txt"))) {
+    private static void getFileStrings(ArrayList<String> fileStrings) {
+        try (Scanner scanner = new Scanner(new FileInputStream("InputString.txt"))) {
             while (scanner.hasNextLine()) {
                 fileStrings.add(scanner.nextLine());
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("Файл не найден");
         }
     }
 
@@ -19,6 +21,7 @@ public class Main {
         for (int i = 0; i < numbers.size(); i++) {
             if (numbers.get(i) % 2 == 0) {
                 numbers.remove(i);
+
                 i--;
             }
         }
@@ -32,22 +35,23 @@ public class Main {
                 notRepeatedNumbers.add(number);
             }
         }
+
         return notRepeatedNumbers;
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         ArrayList<String> fileStrings = new ArrayList<>();
 
-        Main.getFileStrings(fileStrings);
+        getFileStrings(fileStrings);
         System.out.println(fileStrings);
 
         ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(6, 4, 7, 0, 9, 5, 2, 3));
 
-        Main.removeEvenNumbers(numbers);
+        removeEvenNumbers(numbers);
         System.out.println(numbers);
 
         ArrayList<Integer> repeatedNumbers = new ArrayList<>(Arrays.asList(2, 5, 4, 2, 9, 5, 2, 7));
 
-        System.out.println(Main.removeRepeatedNumbers(repeatedNumbers));
+        System.out.println(removeRepeatedNumbers(repeatedNumbers));
     }
 }
