@@ -7,14 +7,20 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    private static void getFileStrings(ArrayList<String> fileStrings) {
-        try (Scanner scanner = new Scanner(new FileInputStream("InputString.txt"))) {
+    private static ArrayList<String> getFileStrings(String filePath) {
+        try (Scanner scanner = new Scanner(new FileInputStream(filePath))) {
+            ArrayList<String> fileStrings = new ArrayList<>();
+
             while (scanner.hasNextLine()) {
                 fileStrings.add(scanner.nextLine());
             }
+
+            return fileStrings;
         } catch (FileNotFoundException e) {
             System.out.println("Файл не найден");
         }
+
+        return null;
     }
 
     private static void removeEvenNumbers(ArrayList<Integer> numbers) {
@@ -40,10 +46,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        ArrayList<String> fileStrings = new ArrayList<>();
-
-        getFileStrings(fileStrings);
-        System.out.println(fileStrings);
+        String filePath = "InputStrings.txt";
+        System.out.println(getFileStrings(filePath));
 
         ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(6, 4, 7, 0, 9, 5, 2, 3));
 
