@@ -2,8 +2,6 @@ package belyaeva.matrix.task;
 
 import belyaeva.vector.task.Vector;
 
-import java.util.Arrays;
-
 public class Matrix {
     private Vector[] rows;
 
@@ -20,15 +18,18 @@ public class Matrix {
     }
 
     public Matrix(Matrix matrix) {
-        this.rows = Arrays.copyOf(matrix.rows, matrix.rows.length);
+        this.rows = new Vector[matrix.rows.length];
+
+        for (int i = 0; i < this.rows.length; i++) {
+            rows[i] = new Vector(matrix.rows[i]);
+        }
     }
 
     public Matrix(double[][] matrix) {
-        if (matrix.length <= 0 || matrix[0].length <= 0) {
-            throw new IllegalArgumentException("double[][] size must be > 0");
+        if (matrix.length <= 0) {
+            throw new IllegalArgumentException("double[] size must be > 0");
         }
 
-        Vector[] rows = new Vector[matrix.length];
         int max = 0;
 
         for (double[] doubles : matrix) {
@@ -37,9 +38,16 @@ public class Matrix {
             }
         }
 
+        if (max == 0) {
+            throw new IllegalArgumentException("double[][] size must be > 0");
+        }
+
+        Vector[] rows = new Vector[matrix.length];
+
         for (int i = 0; i < matrix.length; i++) {
             rows[i] = new Vector(max, matrix[i]);
         }
+
         this.rows = rows;
     }
 
@@ -48,7 +56,6 @@ public class Matrix {
             throw new IllegalArgumentException("Vector[] size must be > 0");
         }
 
-        this.rows = Arrays.copyOf(rows, rows.length);
         int max = 0;
 
         for (Vector row : rows) {
@@ -57,9 +64,13 @@ public class Matrix {
             }
         }
 
-        for (Vector row : rows) {
-            if (row.getSize() < max) {
-                row.addVector(new Vector(max));
+        this.rows = new Vector[rows.length];
+
+        for (int i = 0; i < this.rows.length; i++) {
+            this.rows[i] = new Vector(rows[i]);
+
+            if (this.rows[i].getSize() < max) {
+                this.rows[i].addVector(new Vector(max));
             }
         }
     }
