@@ -4,9 +4,6 @@ class ListItem<T> {
     private T data;
     private ListItem<T> next;
 
-    ListItem() {
-    }
-
     ListItem(T data) {
         this.data = data;
     }
