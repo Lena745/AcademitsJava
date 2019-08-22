@@ -36,7 +36,7 @@ public class Main {
     private static ArrayList<Integer> removeRepeatedNumbers(ArrayList<Integer> numbers) {
         ArrayList<Integer> notRepeatedNumbers = new ArrayList<>();
 
-        for (int number : numbers) {
+        for (Integer number : numbers) {
             if (!notRepeatedNumbers.contains(number)) {
                 notRepeatedNumbers.add(number);
             }
