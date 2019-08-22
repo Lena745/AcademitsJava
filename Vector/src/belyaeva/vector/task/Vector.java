@@ -64,29 +64,29 @@ public class Vector {
     }
 
     public void addVector(Vector v) {
-        int minVector = getMinVector(v).length;
-        int maxVector = getMaxVector(v).length;
+        int minVectorLength = getMinVector(v).length;
+        int maxVectorLength = getMaxVector(v).length;
 
         if (v.components == getMaxVector(v)) {
-            this.components = Arrays.copyOf(components, maxVector);
-            minVector = maxVector;
+            this.components = Arrays.copyOf(components, maxVectorLength);
+            minVectorLength = maxVectorLength;
         }
 
-        for (int i = 0; i < minVector; i++) {
+        for (int i = 0; i < minVectorLength; i++) {
             components[i] += v.components[i];
         }
     }
 
     public void subVector(Vector v) {
-        int maxVector = getMaxVector(v).length;
-        int minVector = getMinVector(v).length;
+        int maxVectorLength = getMaxVector(v).length;
+        int minVectorLength = getMinVector(v).length;
 
         if (v.components == getMaxVector(v)) {
-            this.components = Arrays.copyOf(components, maxVector);
-            minVector = maxVector;
+            this.components = Arrays.copyOf(components, maxVectorLength);
+            minVectorLength = maxVectorLength;
         }
 
-        for (int i = 0; i < minVector; i++) {
+        for (int i = 0; i < minVectorLength; i++) {
             components[i] -= v.components[i];
         }
     }
@@ -157,9 +157,9 @@ public class Vector {
 
     public static double getScalarProduct(Vector v1, Vector v2) {
         double result = 0;
-        int minVector = v1.getMinVector(v2).length;
+        int minVectorLength = v1.getMinVector(v2).length;
 
-        for (int i = 0; i < minVector; i++) {
+        for (int i = 0; i < minVectorLength; i++) {
             result += v1.components[i] * v2.components[i];
         }
         return result;

@@ -23,8 +23,11 @@ public class Main {
 
         double scalar = 0.9;
 
-        System.out.println("multiplyByScalar = " + vector2.multiplyByScalar(scalar));
-        System.out.println("turn = " + vector5.revert());
+        vector2.multiplyByScalar(scalar);
+        System.out.println("multiplyByScalar = " + vector2);
+
+        vector5.revert();
+        System.out.println("revert = " + vector5);
         System.out.println("getLength = " + vector2.getLength());
         vector4.setValue(2, 4);
         System.out.println("after set value = " + vector4);
