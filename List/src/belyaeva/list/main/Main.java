@@ -36,7 +36,7 @@ public class Main {
         System.out.println(list);
         System.out.println("getSize() = " + list.getSize());
 
-        System.out.println("removeByData() = " + list.removeByData(1));
+        System.out.println("removeByData() = " + list.removeByData(8));
         System.out.println(list);
         System.out.println("getSize() = " + list.getSize());
 
