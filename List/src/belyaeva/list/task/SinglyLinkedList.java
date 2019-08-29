@@ -1,5 +1,7 @@
 package belyaeva.list.task;
 
+import java.util.Objects;
+
 public class SinglyLinkedList<T> {
     private int count;
     private ListItem<T> head;
@@ -62,6 +64,10 @@ public class SinglyLinkedList<T> {
     }
 
     public T removeByIndex(int index) {
+        if (index == 0) {
+            return removeFirst();
+        }
+
         ListItem<T> p = getItem(index - 1);
         T removedData = p.getNext().getData();
 
@@ -79,14 +85,17 @@ public class SinglyLinkedList<T> {
     }
 
     public void insertByIndex(int index, T data) {
-        ListItem<T> q = new ListItem<>(data);
+        if (head == null && index != 0) {
+            throw new IllegalArgumentException("Index must be = 0");
+        }
 
-        if (head == null) {
-            insertFirst(q.getData());
+        if (index == 0) {
+            insertFirst(data);
 
             return;
         }
 
+        ListItem<T> q = new ListItem<>(data);
         ListItem<T> p = getItem(index - 1);
 
         q.setNext(p.getNext());
@@ -97,7 +106,7 @@ public class SinglyLinkedList<T> {
 
     public boolean removeByData(T data) {
         for (ListItem<T> p = head, prev = null; p != null; prev = p, p = p.getNext()) {
-            if (p.getData().equals(data)) {
+            if (Objects.equals(p.getData(), data)) {
                 if (prev != null) {
                     p = prev;
                     p.setNext(p.getNext().getNext());

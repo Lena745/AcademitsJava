@@ -19,9 +19,9 @@ public class Main {
         System.out.println(list);
         System.out.println("getSize() = " + list.getSize());
 
-        SinglyLinkedList<Integer> copyList = list.getCopy();
-        System.out.println("copy() = " + copyList);
-        System.out.println("copy getSize() = " + copyList.getSize());
+        SinglyLinkedList<Integer> listCopy = list.getCopy();
+        System.out.println("copy() = " + listCopy);
+        System.out.println("copy getSize() = " + listCopy.getSize());
 
         list.revert();
         System.out.println("revert() = " + list);
