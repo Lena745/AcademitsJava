@@ -35,10 +35,6 @@ public class SinglyLinkedList<T> {
     }
 
     private ListItem<T> getItem(int index) {
-        if (index < 0 || index >= count) {
-            throw new IndexOutOfBoundsException("Index must be >= 0 and < " + count);
-        }
-
         int i = 0;
         ListItem<T> p = head;
 
@@ -50,28 +46,44 @@ public class SinglyLinkedList<T> {
         return p;
     }
 
+    private boolean notIsInBounds(int index, int count) {
+        return index < 0 || index >= count;
+    }
+
     public T getDataByIndex(int index) {
+        if (notIsInBounds(index, count)) {
+            throw new IndexOutOfBoundsException("Index must be >= 0 and < " + count);
+        }
+
         return getItem(index).getData();
     }
 
     public T changeDataByIndex(int index, T data) {
-        ListItem<T> p = getItem(index);
+        if (notIsInBounds(index, count)) {
+            throw new IndexOutOfBoundsException("Index must be >= 0 and < " + count);
+        }
 
-        T changedData = p.getData();
-        p.setData(data);
+        ListItem<T> itemToChange = getItem(index);
+
+        T changedData = itemToChange.getData();
+        itemToChange.setData(data);
 
         return changedData;
     }
 
     public T removeByIndex(int index) {
+        if (notIsInBounds(index, count)) {
+            throw new IndexOutOfBoundsException("Index must be >= 0 and < " + count);
+        }
+
         if (index == 0) {
             return removeFirst();
         }
 
-        ListItem<T> p = getItem(index - 1);
-        T removedData = p.getNext().getData();
+        ListItem<T> prevItem = getItem(index - 1);
+        T removedData = prevItem.getNext().getData();
 
-        p.setNext(p.getNext().getNext());
+        prevItem.setNext(prevItem.getNext().getNext());
 
         count--;
 
@@ -85,8 +97,8 @@ public class SinglyLinkedList<T> {
     }
 
     public void insertByIndex(int index, T data) {
-        if (head == null && index != 0) {
-            throw new IllegalArgumentException("Index must be = 0");
+        if (notIsInBounds(index, count + 1)) {
+            throw new IndexOutOfBoundsException("Index must be >= 0 and <= " + count);
         }
 
         if (index == 0) {
@@ -95,11 +107,11 @@ public class SinglyLinkedList<T> {
             return;
         }
 
-        ListItem<T> q = new ListItem<>(data);
-        ListItem<T> p = getItem(index - 1);
+        ListItem<T> prevItem = getItem(index - 1);
+        ListItem<T> newItem = new ListItem<>(data);
 
-        q.setNext(p.getNext());
-        p.setNext(q);
+        newItem.setNext(prevItem.getNext());
+        prevItem.setNext(newItem);
 
         count++;
     }
