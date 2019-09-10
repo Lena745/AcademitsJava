@@ -14,7 +14,7 @@ public class Main {
         persons.add(new Person("Alice", 20));
         persons.add(new Person("Jane", 12));
         persons.add(new Person("John", 15));
-        persons.add(new Person("Ken", 31));
+        persons.add(new Person("Alice", 31));
         persons.add(new Person("Molly", 35));
 
         /*А) получить список уникальных имен*/
@@ -47,12 +47,10 @@ public class Main {
         averageAge.ifPresent(System.out::println);
 
         /*Г) при помощи группировки получить Map, в котором ключи – имена, а значения – средний возраст*/
-        Map<String, List<Person>> personsByName = persons.stream()
-                .collect(Collectors.groupingBy(Person::getName));
+        Map<String, Double> personsByName = persons.stream()
+                .collect(Collectors.groupingBy(Person::getName, Collectors.averagingInt(Person::getAge)));
 
-        personsByName.forEach((name, age) -> System.out.printf("Name %s: %s%n", name, age.stream()
-                .mapToInt(Person::getAge)
-                .average().orElse(0)));
+        personsByName.forEach((name, age) -> System.out.printf("Name %s: %s%n", name, age));
 
         /*Д) получить людей, возраст которых от 20 до 45, вывести в консоль их имена
              в порядке убывания возраста*/
@@ -69,7 +67,7 @@ public class Main {
 
         System.out.println("Введите число:");
         int n = scanner.nextInt();
-        DoubleStream squareRoots = DoubleStream.iterate(1, x -> x + 1).limit(n).map(Math::sqrt);
+        DoubleStream squareRoots = DoubleStream.iterate(1, x -> x + 1).map(Math::sqrt).limit(n);
 
         squareRoots.forEach(System.out::println);
     }
