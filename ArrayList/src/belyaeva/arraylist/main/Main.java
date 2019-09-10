@@ -21,15 +21,6 @@ public class Main {
 
         List<Integer> list2 = new ArrayList<>(Arrays.asList(5, 8, 6));
 
-        System.out.println("list.removeAll = " + list.removeAll(list2));
-        System.out.println("list.removeAll = " + list);
-        System.out.println("list.size = " + list.size());
-
-
-        list.addAll(2, list2);
-        System.out.println("list.addAll(index) = " + list);
-        System.out.println("list.size = " + list.size());
-
         System.out.println("list.lastIndexOf = " + list.lastIndexOf(8));
 
         System.out.println("list.get = " + list.get(4));
@@ -61,6 +52,9 @@ public class Main {
         System.out.println("list.add(item) = " + list);
         System.out.println("list.size = " + list.size());
 
+        List<Integer> list5 = new ArrayList<>(Arrays.asList(9, 12));
+        System.out.println("list.containsAll = " + list.containsAll(list5));
+
         List<Integer> list3 = new ArrayList<>(Arrays.asList(3, 1, 7));
 
         System.out.println("list.retainAll = " + list.retainAll(list3));
@@ -89,5 +83,6 @@ public class Main {
         System.out.println("list.indexOf = " + list2.indexOf(6));
 
         list4.trimToSize();
+        list4.ensureCapacity(10);
     }
 }

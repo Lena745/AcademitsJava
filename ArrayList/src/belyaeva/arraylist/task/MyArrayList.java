@@ -34,18 +34,18 @@ public class MyArrayList<E> implements List<E> {
 
     private class MyArrayListIterator implements Iterator<E> {
         private int currentIndex = -1;
-        int currentModCount = modCount;
+        private int currentModCount = modCount;
 
         public boolean hasNext() {
             return currentIndex + 1 < size;
         }
 
         public E next() {
-            if (currentModCount != modCount) {
-                throw new ConcurrentModificationException("List was changed");
-            }
-            if (currentIndex >= size) {
+            if (!hasNext()) {
                 throw new NoSuchElementException("End of the list");
+            }
+            if (currentModCount != modCount) {
+                throw new ConcurrentModificationException("List was changed during iteration");
             }
 
             currentIndex++;
@@ -54,16 +54,15 @@ public class MyArrayList<E> implements List<E> {
         }
     }
 
-    private void ensureCapacity(int capacity) {
-        if (items.length < capacity) {
-            items = Arrays.copyOf(items, (items.length * 3) / 2 + 1);
+    public void ensureCapacity(int minCapacity) {
+        if (items.length < minCapacity) {
+            items = Arrays.copyOf(items, minCapacity);
         }
     }
 
     public void trimToSize() {
         if (size < items.length) {
             items = Arrays.copyOf(items, size);
-            modCount++;
         }
     }
 
@@ -79,13 +78,7 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean contains(Object o) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(items[i], o)) {
-                return true;
-            }
-        }
-
-        return false;
+        return indexOf(o) != -1;
     }
 
     @Override
@@ -95,25 +88,20 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public Object[] toArray() {
-        Object[] array = new Object[size];
-
-        System.arraycopy(items, 0, array, 0, size);
-
-        return array;
+        return Arrays.copyOf(items, size);
     }
 
     @Override
     public <T> T[] toArray(T[] array) {
         if (array.length < items.length) {
             //noinspection unchecked
-            return Arrays.copyOf((T[]) items, size);
-        } else {
-            //noinspection SuspiciousSystemArraycopy
-            System.arraycopy(items, 0, array, 0, size);
+            return (T[]) Arrays.copyOf(items, size, array.getClass());
+        }
+        //noinspection SuspiciousSystemArraycopy
+        System.arraycopy(items, 0, array, 0, size);
 
-            if (array.length > size) {
-                array[size] = null;
-            }
+        if (array.length > size) {
+            array[size] = null;
         }
 
         return array;
@@ -132,12 +120,12 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean remove(Object o) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(items[i], o)) {
-                remove(i);
+        int index = indexOf(o);
 
-                return true;
-            }
+        if (index != -1) {
+            remove(index);
+
+            return true;
         }
 
         return false;
@@ -145,48 +133,54 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean containsAll(Collection<?> collection) {
-        int count = 0;
-
-        for (int i = 0; i < size; i++) {
-            if (collection.contains(items[i])) {
-                count++;
+        for (Object item : collection) {
+            if (!contains(item)) {
+                return false;
             }
         }
 
-        return count == collection.size();
+        return true;
     }
 
     @Override
     public boolean addAll(Collection<? extends E> collection) {
         ensureCapacity(size + collection.size());
+        int currentModCount = modCount;
 
-        //noinspection SuspiciousSystemArraycopy
-        System.arraycopy(collection.toArray(), 0, items, size, collection.size());
+        for (E item : collection) {
+            add(item);
+        }
 
-        size += collection.size();
-        modCount++;
+        return currentModCount != modCount;
 
-        return true;
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends E> collection) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index must be > 0 and < " + size);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index must be > 0 and <= " + size);
         }
+
+        int currentModCount = modCount;
 
         ensureCapacity(size + collection.size());
 
-        Object[] collectionArray = collection.toArray();
+        if (index == size) {
+            return addAll(collection);
+        }
 
-        System.arraycopy(items, index, items, index + collectionArray.length, collectionArray.length);
-        //noinspection SuspiciousSystemArraycopy
-        System.arraycopy(collectionArray, 0, items, index, collectionArray.length);
+        System.arraycopy(items, index, items, index + collection.size(), collection.size());
 
-        size += collection.size();
-        modCount++;
+        for (E item : collection) {
+            items[index] = item;
 
-        return true;
+            index++;
+            size++;
+            modCount++;
+        }
+
+        return currentModCount != modCount;
+
     }
 
     @Override
@@ -242,9 +236,10 @@ public class MyArrayList<E> implements List<E> {
     public E set(int index, E item) {
         checkIndex(index);
 
-        ensureCapacity(size);
+        E changedItem = items[index];
+        items[index] = item;
 
-        return items[index] = item;
+        return changedItem;
     }
 
     @Override
@@ -291,7 +286,7 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public int lastIndexOf(Object o) {
-        for (int i = size; i > 0; i--) {
+        for (int i = size; i >= 0; i--) {
             if (Objects.equals(items[i], o)) {
                 return i;
             }
