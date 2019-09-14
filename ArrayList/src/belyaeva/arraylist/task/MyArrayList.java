@@ -60,6 +60,10 @@ public class MyArrayList<E> implements List<E> {
         }
     }
 
+    private void increaseCapacity() {
+        items = Arrays.copyOf(items, items.length * 2);
+    }
+
     public void trimToSize() {
         if (size < items.length) {
             items = Arrays.copyOf(items, size);
@@ -109,7 +113,9 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean add(E item) {
-        ensureCapacity(size + 1);
+        if (size == items.length) {
+            increaseCapacity();
+        }
 
         items[size] = item;
         size++;
@@ -145,14 +151,17 @@ public class MyArrayList<E> implements List<E> {
     @Override
     public boolean addAll(Collection<? extends E> collection) {
         ensureCapacity(size + collection.size());
+
         int currentModCount = modCount;
 
         for (E item : collection) {
-            add(item);
+            items[size] = item;
+            size++;
         }
 
-        return currentModCount != modCount;
+        modCount += collection.size();
 
+        return currentModCount != modCount;
     }
 
     @Override
@@ -161,9 +170,9 @@ public class MyArrayList<E> implements List<E> {
             throw new IndexOutOfBoundsException("Index must be > 0 and <= " + size);
         }
 
-        int currentModCount = modCount;
-
         ensureCapacity(size + collection.size());
+
+        int currentModCount = modCount;
 
         if (index == size) {
             return addAll(collection);
@@ -171,16 +180,17 @@ public class MyArrayList<E> implements List<E> {
 
         System.arraycopy(items, index, items, index + collection.size(), collection.size());
 
-        for (E item : collection) {
-            items[index] = item;
+        int i = index;
 
-            index++;
-            size++;
-            modCount++;
+        for (E item : collection) {
+            items[i] = item;
+            i++;
         }
 
-        return currentModCount != modCount;
+        size += collection.size();
+        modCount += collection.size();
 
+        return currentModCount != modCount;
     }
 
     @Override
@@ -248,7 +258,9 @@ public class MyArrayList<E> implements List<E> {
             throw new IndexOutOfBoundsException("Index must be > 0 and <= " + size);
         }
 
-        ensureCapacity(size + 1);
+        if (size == items.length) {
+            increaseCapacity();
+        }
 
         System.arraycopy(items, index, items, index + 1, size - index);
 
@@ -286,7 +298,7 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public int lastIndexOf(Object o) {
-        for (int i = size; i >= 0; i--) {
+        for (int i = size - 1; i >= 0; i--) {
             if (Objects.equals(items[i], o)) {
                 return i;
             }
