@@ -13,6 +13,9 @@ public class MyArrayList<E> implements List<E> {
     }
 
     public MyArrayList(int capacity) {
+        if (capacity < 1) {
+            throw new IllegalArgumentException("Capacity must be >= 1");
+        }
         //noinspection unchecked
         items = (E[]) new Object[capacity];
     }
@@ -152,16 +155,18 @@ public class MyArrayList<E> implements List<E> {
     public boolean addAll(Collection<? extends E> collection) {
         ensureCapacity(size + collection.size());
 
-        int currentModCount = modCount;
+        int currentSize = size;
 
         for (E item : collection) {
             items[size] = item;
             size++;
         }
 
-        modCount += collection.size();
+        if (currentSize != size) {
+            modCount++;
+        }
 
-        return currentModCount != modCount;
+        return currentSize != size;
     }
 
     @Override
@@ -172,8 +177,6 @@ public class MyArrayList<E> implements List<E> {
 
         ensureCapacity(size + collection.size());
 
-        int currentModCount = modCount;
-
         if (index == size) {
             return addAll(collection);
         }
@@ -181,6 +184,7 @@ public class MyArrayList<E> implements List<E> {
         System.arraycopy(items, index, items, index + collection.size(), collection.size());
 
         int i = index;
+        int currentSize = size;
 
         for (E item : collection) {
             items[i] = item;
@@ -188,14 +192,18 @@ public class MyArrayList<E> implements List<E> {
         }
 
         size += collection.size();
-        modCount += collection.size();
 
-        return currentModCount != modCount;
+        if (currentSize != size) {
+            modCount++;
+        }
+
+
+        return currentSize != size;
     }
 
     @Override
     public boolean removeAll(Collection<?> collection) {
-        int currentModCount = modCount;
+        int currentSize = size;
 
         for (int i = 0; i < size; i++) {
             if (collection.contains(items[i])) {
@@ -204,12 +212,12 @@ public class MyArrayList<E> implements List<E> {
             }
         }
 
-        return currentModCount != modCount;
+        return currentSize != size;
     }
 
     @Override
     public boolean retainAll(Collection<?> collection) {
-        int currentModCount = modCount;
+        int currentSize = size;
 
         for (int i = 0; i < size; i++) {
             if (!collection.contains(items[i])) {
@@ -218,7 +226,7 @@ public class MyArrayList<E> implements List<E> {
             }
         }
 
-        return currentModCount != modCount;
+        return currentSize != size;
     }
 
     @Override
