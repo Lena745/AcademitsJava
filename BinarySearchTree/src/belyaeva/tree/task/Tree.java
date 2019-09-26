@@ -1,10 +1,28 @@
 package belyaeva.tree.task;
 
 import java.util.*;
+import java.util.function.Consumer;
 
-public class Tree<T extends Comparable<T>> {
+public class Tree<T> {
     private TreeNode<T> root;
     private int size;
+    private Comparator<T> comparator;
+
+    public Tree() {
+        comparator = null;
+    }
+
+    public Tree(Comparator<T> comparator) {
+        this.comparator = comparator;
+    }
+
+    private int compare(T data1, T data2) {
+        if (comparator != null) {
+            return comparator.compare(data1, data2);
+        }
+        //noinspection unchecked
+        return ((Comparable<T>) data1).compareTo(data2);
+    }
 
     public void insert(T data) {
         if (root == null) {
@@ -17,7 +35,9 @@ public class Tree<T extends Comparable<T>> {
         TreeNode<T> currentNode = root;
 
         while (currentNode != null) {
-            if (data.compareTo(currentNode.getData()) < 0) {
+            int compareResult = compare(data, currentNode.getData());
+
+            if (compareResult < 0) {
                 if (currentNode.getLeft() != null) {
                     currentNode = currentNode.getLeft();
                 } else {
@@ -40,19 +60,18 @@ public class Tree<T extends Comparable<T>> {
         }
     }
 
-    public boolean isContains(T data) {
+    public boolean contains(T data) {
         if (root == null) {
             return false;
         }
 
-        if (data.compareTo(root.getData()) == 0) {
-            return true;
-        }
-
         TreeNode<T> currentNode = root;
+        int compareResult;
 
-        while (data.compareTo(currentNode.getData()) != 0) {
-            if (data.compareTo(currentNode.getData()) < 0) {
+        do {
+            compareResult = compare(data, currentNode.getData());
+
+            if (compareResult < 0) {
                 if (currentNode.getLeft() != null) {
                     currentNode = currentNode.getLeft();
                 } else {
@@ -60,14 +79,14 @@ public class Tree<T extends Comparable<T>> {
                 }
             }
 
-            if (data.compareTo(currentNode.getData()) > 0) {
+            if (compareResult > 0) {
                 if (currentNode.getRight() != null) {
                     currentNode = currentNode.getRight();
                 } else {
                     return false;
                 }
             }
-        }
+        } while (compareResult != 0);
 
         return true;
     }
@@ -81,16 +100,23 @@ public class Tree<T extends Comparable<T>> {
         TreeNode<T> parentNode = null;
         boolean isLeft = false;
 
-        while (data.compareTo(nodeToRemove.getData()) != 0) {
+        while (true) {
+            int compareResult = compare(data, nodeToRemove.getData());
+
+            if (compareResult == 0) {
+                break;
+            }
+
             parentNode = nodeToRemove;
-            if (data.compareTo(nodeToRemove.getData()) < 0) {
+
+            if (compareResult < 0) {
                 if (nodeToRemove.getLeft() != null) {
                     isLeft = true;
                     nodeToRemove = nodeToRemove.getLeft();
                 } else {
                     return false;
                 }
-            } else if (data.compareTo(nodeToRemove.getData()) > 0) {
+            } else {
                 if (nodeToRemove.getRight() != null) {
                     isLeft = false;
                     nodeToRemove = nodeToRemove.getRight();
@@ -177,18 +203,16 @@ public class Tree<T extends Comparable<T>> {
         return size;
     }
 
-    public void widthRound() {
-        if (root == null) {
-            throw new NullPointerException("Tree is empty");
-        }
-
+    public void widthRound(Consumer<T> consumer) {
         Queue<TreeNode<T>> queue = new LinkedList<>();
 
-        queue.add(root);
+        if (root != null) {
+            queue.add(root);
+        }
 
         while (!queue.isEmpty()) {
             TreeNode<T> currentNode = queue.remove();
-            System.out.print(currentNode.getData() + " ");
+            consumer.accept(currentNode.getData());
 
             if (currentNode.getLeft() != null) {
                 queue.add(currentNode.getLeft());
@@ -198,41 +222,36 @@ public class Tree<T extends Comparable<T>> {
                 queue.add(currentNode.getRight());
             }
         }
-        System.out.println();
     }
 
-    public TreeNode<T> getNode() {
+    public TreeNode<T> getRoot() {
         return root;
     }
 
-    public void depthRoundRecursion(TreeNode<T> currentNode) {
-        if (root == null) {
-            throw new NullPointerException("Tree is empty");
-        }
+    public void depthRoundRecursion(TreeNode<T> currentNode, Consumer<T> consumer) {
+        if (root != null) {
+            consumer.accept(currentNode.getData());
 
-        System.out.print(currentNode.getData() + " ");
+            if (currentNode.getLeft() != null) {
+                depthRoundRecursion(currentNode.getLeft(), consumer);
+            }
 
-        if (currentNode.getLeft() != null) {
-            depthRoundRecursion(currentNode.getLeft());
-        }
-
-        if (currentNode.getRight() != null) {
-            depthRoundRecursion(currentNode.getRight());
+            if (currentNode.getRight() != null) {
+                depthRoundRecursion(currentNode.getRight(), consumer);
+            }
         }
     }
 
-    public void depthRound() {
-        if (root == null) {
-            throw new NullPointerException("Tree is empty");
-        }
-
+    public void depthRound(Consumer<T> consumer) {
         Deque<TreeNode<T>> stack = new LinkedList<>();
 
-        stack.add(root);
+        if (root != null) {
+            stack.add(root);
+        }
 
         while (!stack.isEmpty()) {
             TreeNode<T> currentNode = stack.removeLast();
-            System.out.print(currentNode.getData() + " ");
+            consumer.accept(currentNode.getData());
 
             if (currentNode.getRight() != null) {
                 stack.addLast(currentNode.getRight());
@@ -241,6 +260,5 @@ public class Tree<T extends Comparable<T>> {
                 stack.addLast(currentNode.getLeft());
             }
         }
-        System.out.println();
     }
 }
