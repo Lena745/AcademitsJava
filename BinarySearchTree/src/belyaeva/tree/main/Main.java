@@ -75,7 +75,6 @@ public class Main {
         comparatorTree.insert(12);
         comparatorTree.insert(9);
 
-
         System.out.println("depthRound:");
         comparatorTree.depthRound(print);
         System.out.println();

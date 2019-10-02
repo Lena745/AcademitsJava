@@ -145,26 +145,15 @@ public class Tree<T> {
             return true;
         }
 
-        if (nodeToRemove.getLeft() == null && nodeToRemove.getRight() != null) {
-            if (parentNode == null) {
-                root = nodeToRemove.getRight();
-            } else if (isLeft) {
-                parentNode.setLeft(nodeToRemove.getRight());
-            } else {
-                parentNode.setRight(nodeToRemove.getRight());
-            }
-            size--;
+        if (nodeToRemove.getLeft() == null || nodeToRemove.getRight() == null) {
+            TreeNode<T> currentNode = nodeToRemove.getLeft() == null ? nodeToRemove.getRight() : nodeToRemove.getLeft();
 
-            return true;
-        }
-
-        if (nodeToRemove.getRight() == null && nodeToRemove.getLeft() != null) {
             if (parentNode == null) {
-                root = nodeToRemove.getLeft();
+                root = currentNode;
             } else if (isLeft) {
-                parentNode.setLeft(nodeToRemove.getLeft());
+                parentNode.setLeft(currentNode);
             } else {
-                parentNode.setRight(nodeToRemove.getLeft());
+                parentNode.setRight(currentNode);
             }
             size--;
 
