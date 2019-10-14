@@ -4,9 +4,13 @@ import belyaeva.csv.task.CSV;
 
 public class Main {
     public static void main(String[] args) {
-        CSV csv = new CSV();
-        String readFile = "in.csv";
-        String writeFile = "out.html";
-        csv.writeCSV(readFile, writeFile);
+        if (args.length != 2) {
+            System.out.println("It must be 2 arguments");
+        } else {
+            CSV csv = new CSV();
+            String fileToRead = args[0];
+            String fileToWrite = args[1];
+            csv.writeCSV(fileToRead, fileToWrite);
+        }
     }
 }
