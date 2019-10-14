@@ -25,12 +25,12 @@ public class MyHashTable<E> implements Collection<E> {
 
         for (int i = 0; i < hashArray.length; i++) {
             s.append(i).append(": ");
-            if (i == hashArray.length - 1) {
-                s.append(hashArray[i]);
-            } else {
-                s.append(hashArray[i]).append("\n");
+            s.append(hashArray[i]);
+            if (i != hashArray.length - 1) {
+                s.append(System.lineSeparator());
             }
         }
+
         return s.toString();
     }
 
@@ -54,11 +54,13 @@ public class MyHashTable<E> implements Collection<E> {
 
     @Override
     public boolean contains(Object o) {
-        if (hashArray[getHashCode(o)] == null) {
+        int index = getHashCode(o);
+
+        if (hashArray[index] == null) {
             return false;
         }
 
-        return hashArray[getHashCode(o)].contains(o);
+        return hashArray[index].contains(o);
     }
 
     private class MyHashTableIterator implements Iterator<E> {
@@ -109,32 +111,28 @@ public class MyHashTable<E> implements Collection<E> {
         Object[] array = new Object[size];
         int i = 0;
 
-        for (ArrayList<E> indexList : hashArray) {
-            if (indexList != null) {
-                for (Object item : indexList) {
-                    array[i] = item;
-                    i++;
-                }
-            }
+        for (E item : this) {
+            array[i] = item;
+            i++;
         }
 
         return array;
     }
 
     @Override
-    public <T> T[] toArray(T[] ts) {
-        if (ts.length < size) {
+    public <T> T[] toArray(T[] array) {
+        if (array.length < size) {
             //noinspection unchecked
-            return (T[]) Arrays.copyOf(toArray(), size, ts.getClass());
+            return (T[]) Arrays.copyOf(toArray(), size, array.getClass());
         }
         //noinspection SuspiciousSystemArraycopy
-        System.arraycopy(toArray(), 0, ts, 0, size);
+        System.arraycopy(toArray(), 0, array, 0, size);
 
-        if (ts.length > size) {
-            ts[size] = null;
+        if (array.length > size) {
+            array[size] = null;
         }
 
-        return ts;
+        return array;
     }
 
     @Override
@@ -174,8 +172,7 @@ public class MyHashTable<E> implements Collection<E> {
     @Override
     public boolean containsAll(Collection<?> collection) {
         for (Object item : collection) {
-            //noinspection SuspiciousMethodCalls
-            if (!hashArray[getHashCode(item)].contains(item)) {
+            if (!contains(item)) {
                 return false;
             }
         }
@@ -187,9 +184,8 @@ public class MyHashTable<E> implements Collection<E> {
     public boolean addAll(Collection<? extends E> collection) {
         int currentSize = size;
 
-        for (Object item : collection) {
-            //noinspection unchecked
-            add((E) item);
+        for (E item : collection) {
+            add(item);
         }
 
         return currentSize != size;
@@ -199,13 +195,11 @@ public class MyHashTable<E> implements Collection<E> {
     public boolean removeAll(Collection<?> collection) {
         int currentSize = size;
 
-        for (Object item : collection) {
-            int index = getHashCode(item);
-            //noinspection SuspiciousMethodCalls
-            if (hashArray[index].contains(item)) {
-                //noinspection SuspiciousMethodCalls
-                hashArray[index].remove(item);
-                size--;
+        for (ArrayList<E> indexList : hashArray) {
+            if (indexList != null) {
+                size -= indexList.size();
+                indexList.removeAll(collection);
+                size += indexList.size();
             }
         }
 
@@ -238,7 +232,9 @@ public class MyHashTable<E> implements Collection<E> {
     @Override
     public void clear() {
         for (int i = 0; i < hashArray.length; i++) {
-            hashArray[i] = null;
+            if (hashArray[i] != null) {
+                hashArray[i] = null;
+            }
         }
 
         size = 0;

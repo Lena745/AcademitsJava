@@ -8,10 +8,16 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
         MyHashTable<Integer> ht = new MyHashTable<>(11);
-        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(7, 20, 1, 90, 45, 4, 63, 18, 11, 53, 71));
+        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(7, 20, 1, 90, 45, 4, 63, 18, 7, 11, 53, 71));
         ArrayList<Integer> list3 = new ArrayList<>(Arrays.asList(4, 71, 1, 45, 18, 11));
 
         System.out.println("addAll = " + ht.addAll(list));
+        System.out.println(ht);
+        System.out.println("size = " + ht.size());
+
+        ArrayList<Integer> list2 = new ArrayList<>(Arrays.asList(7, 90, 63, 53));
+
+        System.out.println("removeAll = " + ht.removeAll(list2));
         System.out.println(ht);
         System.out.println("size = " + ht.size());
 
@@ -27,15 +33,9 @@ public class Main {
         System.out.println(ht);
         System.out.println("size = " + ht.size());
 
-        ArrayList<Integer> list1 = new ArrayList<>(Arrays.asList(4, 1, 11, 71));
+        ArrayList<Integer> list1 = new ArrayList<>(Arrays.asList(4, 78, 11, 71));
 
         System.out.println("containsAll = " + ht.containsAll(list1));
-
-        ArrayList<Integer> list2 = new ArrayList<>(Arrays.asList(7, 90, 63, 18, 53));
-
-        System.out.println("removeAll = " + ht.removeAll(list2));
-        System.out.println(ht);
-        System.out.println("size = " + ht.size());
 
         System.out.println("contains = " + ht.contains(78));
 
