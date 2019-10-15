@@ -235,9 +235,7 @@ public class MyHashTable<E> implements Collection<E> {
             modCount++;
         }
 
-        for (int i = 0; i < hashArray.length; i++) {
-            hashArray[i] = null;
-        }
+        Arrays.fill(hashArray, null);
 
         size = 0;
     }
