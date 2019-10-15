@@ -44,7 +44,7 @@ public class MyHashTable<E> implements Collection<E> {
         return size == 0;
     }
 
-    private int getHashCode(Object o) {
+    private int getIndex(Object o) {
         if (o == null) {
             return 0;
         }
@@ -54,7 +54,7 @@ public class MyHashTable<E> implements Collection<E> {
 
     @Override
     public boolean contains(Object o) {
-        int index = getHashCode(o);
+        int index = getIndex(o);
 
         if (hashArray[index] == null) {
             return false;
@@ -137,7 +137,7 @@ public class MyHashTable<E> implements Collection<E> {
 
     @Override
     public boolean add(E item) {
-        int index = getHashCode(item);
+        int index = getIndex(item);
 
         if (hashArray[index] == null) {
             hashArray[index] = new ArrayList<>();
@@ -153,7 +153,7 @@ public class MyHashTable<E> implements Collection<E> {
 
     @Override
     public boolean remove(Object o) {
-        int index = getHashCode(o);
+        int index = getIndex(o);
 
         if (hashArray[index] == null) {
             return false;
@@ -231,13 +231,14 @@ public class MyHashTable<E> implements Collection<E> {
 
     @Override
     public void clear() {
+        if (size > 0) {
+            modCount++;
+        }
+
         for (int i = 0; i < hashArray.length; i++) {
-            if (hashArray[i] != null) {
-                hashArray[i] = null;
-            }
+            hashArray[i] = null;
         }
 
         size = 0;
-        modCount++;
     }
 }
