@@ -10,7 +10,7 @@ public class Main {
             CSV csv = new CSV();
             String fileToRead = args[0];
             String fileToWrite = args[1];
-            csv.writeCSV(fileToRead, fileToWrite);
+            csv.convertCSVtoHTML(fileToRead, fileToWrite);
         }
     }
 }

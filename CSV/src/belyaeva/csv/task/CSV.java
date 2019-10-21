@@ -1,40 +1,12 @@
 package belyaeva.csv.task;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.io.*;
 import java.util.Scanner;
 
 public class CSV {
-    private ArrayList<String> readCSV(String filepath) {
-        ArrayList<String> stringList = new ArrayList<>();
-
-        try (Scanner scanner = new Scanner(new FileInputStream(filepath), "windows-1251")) {
-            while (scanner.hasNextLine()) {
-                stringList.add(scanner.nextLine());
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        }
-
-        return stringList;
-    }
-
-    private void print(PrintWriter writer, char symbol) {
-        if (symbol == '<') {
-            writer.print("&lt;");
-        } else if (symbol == '>') {
-            writer.print("&gt;");
-        } else if (symbol == '&') {
-            writer.print("&amp;");
-        } else {
-            writer.print(symbol);
-        }
-    }
-
-    public void writeCSV(String readPath, String writePath) {
-        try (PrintWriter writer = new PrintWriter(writePath)) {
+    public void convertCSVtoHTML(String readPath, String writePath) {
+        try (Scanner scanner = new Scanner(new FileInputStream(readPath), "windows-1251");
+             PrintWriter writer = new PrintWriter(writePath)) {
             writer.println("<!DOCTYPE html>");
             writer.println("<html>");
             writer.println("<head>");
@@ -47,13 +19,11 @@ public class CSV {
             boolean isInQuotes = false;
             boolean isDoubleQuotes = false;
             boolean isNewLine = true;
-            int doubleQuotesCount = 0;
             char comma = ',';
             char quotes = '"';
 
-            ArrayList<String> lines = readCSV(readPath);
-
-            for (String line : lines) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
                 if (isNewLine) {
                     writer.println("<tr>");
                     writer.println("<td>");
@@ -61,25 +31,41 @@ public class CSV {
                 for (int j = 0; j < line.length(); j++) {
                     char symbol = line.charAt(j);
 
-                    if (j == line.length() - 1) {
-                        if (symbol == quotes) {
-                            if (isDoubleQuotes) {
-                                isDoubleQuotes = false;
-                                doubleQuotesCount = 0;
-                            } else if (isInQuotes) {
-                                isInQuotes = false;
-                            }
-                        } else if (symbol == comma) {
-                            if (!isInQuotes) {
-                                writer.println("</td>");
-                                writer.println("<td>");
+                    if (symbol == quotes) {
+                        if (j != line.length() - 1) {
+                            if (line.charAt(j + 1) == quotes) {
+                                if (isInQuotes) {
+                                    if (!isDoubleQuotes) {
+                                        writer.print(symbol);
+                                        isDoubleQuotes = true;
+                                    } else {
+                                        isDoubleQuotes = false;
+                                    }
+                                } else {
+                                    isInQuotes = true;
+                                }
                             } else {
-                                writer.print(symbol);
+                                if (!isDoubleQuotes) {
+                                    isInQuotes = !isInQuotes;
+                                } else {
+                                    isDoubleQuotes = false;
+                                }
                             }
                         } else {
-                            print(writer, symbol);
+                            isInQuotes = !isInQuotes;
                         }
+                    } else if (symbol == comma) {
+                        if (!isInQuotes) {
+                            writer.println("</td>");
+                            writer.println("<td>");
+                        } else {
+                            writer.print(symbol);
+                        }
+                    } else {
+                        print(writer, symbol);
+                    }
 
+                    if (j == line.length() - 1) {
                         if (isInQuotes) {
                             writer.println("<br/>");
                             isNewLine = false;
@@ -87,32 +73,6 @@ public class CSV {
                             writer.println("</td>");
                             writer.println("</tr>");
                             isNewLine = true;
-                        }
-                    } else {
-                        if (symbol == quotes) {
-                            if (line.charAt(j + 1) == quotes) {
-                                doubleQuotesCount++;
-                                isDoubleQuotes = true;
-                                if (doubleQuotesCount % 2 != 0) {
-                                    writer.print(symbol);
-                                }
-                            } else {
-                                if (!isDoubleQuotes) {
-                                    isInQuotes = !isInQuotes;
-                                } else {
-                                    isDoubleQuotes = false;
-                                    doubleQuotesCount = 0;
-                                }
-                            }
-                        } else if (symbol == comma) {
-                            if (!isInQuotes) {
-                                writer.println("</td>");
-                                writer.println("<td>");
-                            } else {
-                                writer.print(symbol);
-                            }
-                        } else {
-                            print(writer, symbol);
                         }
                     }
                 }
@@ -122,7 +82,19 @@ public class CSV {
             writer.println("</body>");
             writer.println("</html>");
         } catch (FileNotFoundException e) {
-            System.out.println("Can't write file");
+            System.out.println("Can't read/write file");
+        }
+    }
+
+    private void print(PrintWriter writer, char symbol) {
+        if (symbol == '<') {
+            writer.print("&lt;");
+        } else if (symbol == '>') {
+            writer.print("&gt;");
+        } else if (symbol == '&') {
+            writer.print("&amp;");
+        } else {
+            writer.print(symbol);
         }
     }
 }
