@@ -1,18 +1,18 @@
 package belyaeva.temperature.model;
 
-public class Fahrenheit implements Scale {
+public class CelsiusScale implements Scale {
     @Override
     public String toString() {
-        return "Фаренгейт";
+        return "Цельсий";
     }
 
     @Override
     public double convertFromCelsius(double inTemperature) {
-        return inTemperature * 1.8 + 32;
+        return inTemperature;
     }
 
     @Override
     public double convertToCelsius(double inTemperature) {
-        return (inTemperature - 32) / 1.8;
+        return inTemperature;
     }
 }

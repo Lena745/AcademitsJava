@@ -1,6 +1,6 @@
 package belyaeva.temperature.model;
 
-public class Kelvin implements Scale {
+public class KelvinScale implements Scale {
     @Override
     public String toString() {
         return "Кельвин";

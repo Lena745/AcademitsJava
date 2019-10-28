@@ -1,9 +1,6 @@
 package belyaeva.temperature.view;
 
 import belyaeva.temperature.controller.ConverterController;
-import belyaeva.temperature.model.Celsius;
-import belyaeva.temperature.model.Fahrenheit;
-import belyaeva.temperature.model.Kelvin;
 import belyaeva.temperature.model.Scale;
 
 import javax.swing.*;
@@ -14,22 +11,27 @@ import java.util.Locale;
 public class ConverterView {
     private final JFrame frame = new JFrame("Перевод температур");
     private final JPanel panel = new JPanel(new GridBagLayout());
-    private final JComboBox<Scale> inScales = new JComboBox<>();
-    private final JComboBox<Scale> outScales = new JComboBox<>();
+    private JComboBox<Scale> inScales;
+    private JComboBox<Scale> outScales;
     private final JTextField entryTemperature = new JTextField("", 10);
     private final JButton calculateButton = new JButton("Рассчитать");
     private final JTextField resultTemperature = new JTextField("", 10);
     private final JButton clearButton = new JButton("Очистить");
+    private Scale[] scales;
+
+    public ConverterView(Scale[] scales) {
+        this.scales = scales;
+    }
 
     private void initFrame() {
         SwingUtilities.invokeLater(() -> {
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.setSize(350, 270);
+            panel.setPreferredSize(new Dimension(300, 250));
+            frame.add(panel);
+            frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
             frame.setResizable(false);
-
-            frame.add(panel);
 
             GridBagConstraints c = new GridBagConstraints();
             c.fill = GridBagConstraints.BOTH;
@@ -41,9 +43,7 @@ public class ConverterView {
             c.insets = new Insets(7, 5, 8, 5);
             panel.add(new JLabel("Выберите шкалу для ввода:"), c);
 
-            inScales.addItem(new Celsius());
-            inScales.addItem(new Kelvin());
-            inScales.addItem(new Fahrenheit());
+            inScales = new JComboBox<>(scales);
             c.gridx = 3;
             c.gridy = 1;
             panel.add(inScales, c);
@@ -52,9 +52,7 @@ public class ConverterView {
             c.gridy = 2;
             panel.add(new JLabel("Выберите шкалу для вывода:"), c);
 
-            outScales.addItem(new Celsius());
-            outScales.addItem(new Kelvin());
-            outScales.addItem(new Fahrenheit());
+            outScales = new JComboBox<>(scales);
             c.gridx = 3;
             c.gridy = 2;
             panel.add(outScales, c);
@@ -70,7 +68,7 @@ public class ConverterView {
 
             c.gridx = 0;
             c.gridy = 4;
-            c.insets = new Insets(7, 105, 8, 0);
+            c.insets = new Insets(7, 80, 8, -25);
             panel.add(calculateButton, c);
 
             c.gridx = 0;
@@ -85,7 +83,7 @@ public class ConverterView {
 
             c.gridx = 0;
             c.gridy = 6;
-            c.insets = new Insets(7, 127, 8, 20);
+            c.insets = new Insets(7, 80, 8, -25);
             panel.add(clearButton, c);
         });
     }
